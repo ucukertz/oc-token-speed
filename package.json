@@ -1,0 +1,36 @@
+{
+  "name": "oc-token-speed",
+  "version": "0.1.0",
+  "description": "OpenCode TUI plugin: live tokens/sec, 10-message moving-average tokens/sec, and latest TTFT in the prompt bar.",
+  "type": "module",
+  "main": "./src/index.tsx",
+  "exports": {
+    ".": "./src/index.tsx"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "tui",
+    "tokens",
+    "tps",
+    "ttft"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ucukertz/oc-token-speed.git"
+  },
+  "author": "ucukertz",
+  "license": "MIT",
+  "peerDependencies": {
+    "@opencode-ai/plugin": ">=1.14.0"
+  },
+  "dependencies": {
+    "solid-js": "^1.9.12",
+    "@opentui/solid": "^0.6.6"
+  }
+}
