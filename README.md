@@ -36,4 +36,4 @@ Or from a local file:
 
 ## License
 
-MIT
+MIT © [ucukertz](https://github.com/ucukertz) — see [LICENSE](./LICENSE).
