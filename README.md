@@ -6,7 +6,7 @@ OpenCode TUI plugin that shows token throughput in the prompt bar:
 84.8 tok/s AVG 84.8 tok/s | TTFT 14.3s AVG 14.3s
 ```
 
-- **live** — latest response, `(output + reasoning) / (completed ?? now − firstToken)`. Updates every 250 ms while streaming, keeps that value when the response completes, and only switches when the next response produces its first token.
+- **live** — latest response, `(output + reasoning) / (completed − firstToken)`. Token counts are only reported when the response completes, so this is computed once at the end; it shows `-` while a response is streaming.
 - **AVG** (first) — moving average `Σtokens / Σduration` over the **last 10** completed assistant messages (generation window, TTFT excluded). Scoped to the session and to the TUI process (in-memory, resets on restart).
 - **TTFT** / **AVG** (second) — latest response's time to first token, and the moving average over the last 10 responses that produced a token, measured from the message `time.created` to the first `text`/`reasoning` part update.
 

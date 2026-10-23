@@ -18,7 +18,6 @@ type Tracker = {
   counted: Set<string>
 }
 
-const TICK_MS = 250
 const AVERAGE_WINDOW = 10
 
 const formatRate = (value: number) => {
@@ -33,11 +32,9 @@ function StatusLine(props: {
   sessionID: () => string | undefined
   tracker: Tracker
   version: () => number
-  clock: () => number
 }) {
   const latest = createMemo(() => {
     props.version()
-    props.clock()
     const sid = props.sessionID()
     if (!sid) return
     let best: MsgState | undefined
@@ -51,10 +48,10 @@ function StatusLine(props: {
 
   const live = createMemo(() => {
     props.version()
-    props.clock()
     const msg = latest()
     if (!msg || msg.tokens <= 0) return "-"
-    const seconds = ((msg.completed ?? Date.now()) - (msg.firstTokenAt ?? msg.created)) / 1000
+    if (msg.completed === undefined || msg.firstTokenAt === undefined) return "-"
+    const seconds = (msg.completed - msg.firstTokenAt) / 1000
     return formatRate(msg.tokens / seconds)
   })
 
@@ -87,7 +84,6 @@ function StatusLine(props: {
 
   const text = createMemo(() => {
     props.version()
-    props.clock()
     return `${live()} tok/s AVG ${average()} tok/s | TTFT ${ttft()}s AVG ${avgTtft()}s`
   })
 
@@ -110,13 +106,7 @@ function StatusLine(props: {
 const tui: TuiPlugin = async (api) => {
   const tracker: Tracker = { messages: new Map(), averages: new Map(), counted: new Set() }
   const [version, setVersion] = createSignal(0)
-  const [clock, setClock] = createSignal(Date.now())
   const bump = () => setVersion((v) => v + 1)
-
-  const ticker = setInterval(() => setClock(Date.now()), TICK_MS)
-  api.lifecycle.onDispose(() => {
-    clearInterval(ticker)
-  })
 
   api.event.on("message.updated", ({ properties }) => {
     const info = properties.info as any
@@ -168,7 +158,6 @@ const tui: TuiPlugin = async (api) => {
             sessionID={() => value.session_id}
             tracker={tracker}
             version={version}
-            clock={clock}
           />
         )
       },
